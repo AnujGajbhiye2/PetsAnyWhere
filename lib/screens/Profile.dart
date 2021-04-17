@@ -56,12 +56,28 @@ class Profile extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           SingleChildScrollView(
-            padding: EdgeInsets.only(top: 90, left: 2, right: 2),
+            padding: EdgeInsets.only(top: 70, left: 2, right: 2),
             physics: ScrollPhysics(),
             child: Container(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.edit,
+                                color: kBlack,
+                              )
+                            ],
+                          )),
+                    ],
+                  ),
                   SizedBox(height: 16),
                   Container(
                     margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
