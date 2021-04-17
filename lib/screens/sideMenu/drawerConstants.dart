@@ -1,0 +1,19 @@
+const k2_user = "images/theme2/t2_user.svg";
+const k2_chat = "images/theme2/t2_chat.svg";
+const k2_logout = "images/theme2/t2_logout.svg";
+const k2_settings = "images/theme2/t2_settings.svg";
+const k2_help = "images/theme2/t2_help.svg";
+const k2_share = "images/theme2/t2_share.svg";
+const k2_search = "images/theme2/t2_search.svg";
+const k2_plus = "images/theme2/plus.svg";
+const k2_heart = "images/theme2/heart.svg";
+const k2_paw = "images/theme2/paw.svg";
+
+const k2_lbl_adoption = "Adoption";
+const k2_lbl_addPost = "Add post";
+const k2_lbl_favourites = "Favourites";
+const k2_lbl_messages = "Messages";
+const k2_lbl_profile = "Profile";
+const k2_lbl_signOut = "Sign Out";
+const k2_lbl_share = "Share and Invite";
+const k2_lbl_help = "Help and Feedback";

@@ -1,0 +1,6 @@
+package com.petsanywhere.paw;
+
+import io.flutter.embedding.android.FlutterActivity;
+
+public class MainActivity extends FlutterActivity {
+}

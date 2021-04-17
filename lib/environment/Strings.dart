@@ -1,0 +1,1 @@
+const dev_API_LINK = 'https://paw-backend-dev.herokuapp.com/api/auth/';
