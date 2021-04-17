@@ -2,11 +2,9 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:paw/components/TopAppBar.dart';
 import 'package:paw/constants.dart';
-import 'package:paw/screens/sideMenu/drawerConstants.dart';
 import 'package:paw/utilities/utilities.dart';
-
-import 'PetDetailScreen2.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -16,7 +14,7 @@ class Profile extends StatelessWidget {
       margin: new EdgeInsets.symmetric(horizontal: 16.0),
       alignment: FractionalOffset.center,
       child: new CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(k2_user),
+        backgroundImage: CachedNetworkImageProvider(doggoImg),
         radius: 50,
       ),
     );
@@ -28,27 +26,24 @@ class Profile extends StatelessWidget {
         child: Column(
           children: <Widget>[
             SizedBox(height: 50),
-            customText('anuj',
+            customText('Anuj Gajbhiye',
                 textColor: kTextColorPrimary,
                 fontSize: kTextSizeNormal,
-                fontFamily: kFontMedium),
+                fontFamily: kFontBold),
             customText('anuj@gmail.com',
-                textColor: kPrimaryColor,
+                textColor: kSecondaryColor,
                 fontSize: kTextSizeMedium,
-                fontFamily: kFontMedium),
+                fontFamily: kFontBold),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Divider(
-                color: kAccentColor,
-                height: 0.5,
-              ),
+              child: LocalDivider(),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                counter("100", 'aaa'),
-                counter("50", "Photos"),
-                counter("60", "Videos"),
+                counter("0", 'Adopted'),
+                counter("0", "Put for Adoption"),
+                counter("1", "Favourite"),
               ],
             ),
             SizedBox(height: 16),
@@ -83,21 +78,23 @@ class Profile extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                           SizedBox(height: 8),
-                          // rowHeading(t1_lbl_personal),
+                          rowHeading("Personal"),
                           SizedBox(height: 16),
-                          // profilecustomText(t1_user_name),
+                          profileText('Anuj Gajbhiye'),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                            // child: view(),
+                            child: LocalDivider(),
                           ),
                           SizedBox(height: 8),
-                          // profilecustomText("Male"),
+                          profileText("Male"),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                            // child: view(),
+                            child: LocalDivider(),
                           ),
                           SizedBox(height: 8),
-                          // profilecustomText(t1_profile_address, maxline: 2),
+                          profileText(
+                              '46 Sanchi suryakiran soc. Indra nagar \nnew narsala road nagpur',
+                              maxline: 2),
                           SizedBox(height: 16),
                         ],
                       ),
@@ -112,15 +109,15 @@ class Profile extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                           SizedBox(height: 8),
-                          customText('t1_lbl_contacts'),
+                          rowHeading('Contacts'),
                           SizedBox(height: 16),
-                          customText("+91 36982145"),
+                          profileText("+91 8668899045"),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                            // child: view(),
+                            child: LocalDivider(),
                           ),
                           SizedBox(height: 8),
-                          customText("Astoncina@gmail.com"),
+                          profileText("anuj@gmail.com"),
                           SizedBox(height: 8),
                         ],
                       ),
@@ -131,9 +128,23 @@ class Profile extends StatelessWidget {
               ),
             ),
           ),
-          // TopBar(t1_profile_title),
+          TopAppBar('Profile'),
         ],
       ),
+    );
+  }
+}
+
+class LocalDivider extends StatelessWidget {
+  const LocalDivider({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Divider(
+      color: kDividerColor,
+      height: 0.5,
     );
   }
 }

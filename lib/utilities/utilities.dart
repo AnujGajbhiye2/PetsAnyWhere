@@ -26,8 +26,8 @@ Widget customText(String text,
 
 Text profile(var label) {
   return Text(label,
-      style: TextStyle(
-          color: kTextColorPrimary, fontSize: 18, fontFamily: 'Medium'),
+      style:
+          TextStyle(color: kSecondaryColor, fontSize: 18, fontFamily: 'Medium'),
       textAlign: TextAlign.center);
 }
 
@@ -42,6 +42,34 @@ TextStyle secondaryTextStyle({int size = 14, Color textColor = kGreyColor}) {
   return TextStyle(
     fontSize: size.toDouble(),
     color: textColor,
+  );
+}
+
+Row rowHeading(var label) {
+  return Row(
+    children: <Widget>[
+      Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+          child: Text(label,
+              style: TextStyle(
+                  color: Color(0XFF333333), fontSize: 18, fontFamily: 'Bold'),
+              textAlign: TextAlign.left)),
+    ],
+  );
+}
+
+Row profileText(String label, {int maxline = 1}) {
+  return Row(
+    children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 10, 0),
+        child: customText(label,
+            fontSize: kTextSizeMedium,
+            fontFamily: kFontBold,
+            maxLine: maxline,
+            textColor: kBlack),
+      )
+    ],
   );
 }
 
@@ -64,9 +92,9 @@ Widget counter(String counter, String counterName) {
     children: <Widget>[
       profile(counter),
       customText(counterName,
-          textColor: kTextColorPrimary,
+          textColor: kFullBlack,
           fontSize: kTextSizeMedium,
-          fontFamily: kFontMedium)
+          fontFamily: kFontBold)
     ],
   );
 }
@@ -79,10 +107,7 @@ BoxDecoration boxDecoration(
   return BoxDecoration(
     color: bgColor,
     boxShadow: showShadow
-        ? [
-            BoxShadow(
-                color: kTextColorSecondary, blurRadius: 2, spreadRadius: 2)
-          ]
+        ? [BoxShadow(color: Color(0X95E9EBF0), blurRadius: 2, spreadRadius: 2)]
         : [BoxShadow(color: Colors.transparent)],
     border: Border.all(color: color),
     borderRadius: BorderRadius.all(Radius.circular(radius)),
