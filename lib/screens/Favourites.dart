@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:like_button/like_button.dart';
+import 'package:paw/components/TopAppBar.dart';
 import 'package:paw/constants.dart';
 import 'package:paw/model/petInfo_model.dart';
 import 'package:paw/services/PetCardDataGenerator.dart';
 import 'package:paw/utilities/utilities.dart';
+
+import 'PetDetailScreen.dart';
 
 class Favourites extends StatefulWidget {
   @override
@@ -22,25 +26,13 @@ class _FavouritesState extends State<Favourites> {
   @override
   Widget build(BuildContext context) {
     final topView = Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.only(left: 16),
-            child: customText('Favourites',
-                fontFamily: kFontBold, fontSize: kTextSizeNormal),
-          ),
-        ),
         Padding(
             padding: const EdgeInsets.all(16.0),
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                CachedNetworkImage(
-                  imageUrl: doggoImg,
-                  width: 40,
-                  height: 40,
-                ),
                 Icon(
                   Icons.search,
                   color: kBlack,
@@ -64,87 +56,69 @@ class _FavouritesState extends State<Favourites> {
             //     color: t9_white,
             child: Padding(
               padding: EdgeInsets.all(16.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    child: CachedNetworkImage(
-                        imageUrl: petCards[index].image,
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.fill),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                        child: CachedNetworkImage(
+                            imageUrl: petCards[index].image,
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.fill),
+                      ),
+                      Expanded(
+                        child: Column(
                           children: <Widget>[
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  customText(
-                                    petCards[index].name,
-                                    fontFamily: kFontBold,
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        customText(
+                                          petCards[index].name,
+                                          fontSize: kTextSizeNormal,
+                                          fontFamily: kFontBold,
+                                        ),
+                                        SizedBox(height: 4),
+                                        customText(
+                                          petCards[index].breed,
+                                          textColor: kGreyColor,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  SizedBox(height: 4),
-                                  customText(petCards[index].breed,
-                                      textColor: sdSecondaryColorYellow),
+                                  LikeButton(
+                                    size: 25.0,
+                                    isLiked: true,
+                                    onTap: onLikeButtonTapped,
+                                  )
                                 ],
                               ),
                             ),
-                            Icon(Icons.favorite, color: Colors.red, size: 30),
+                            Divider(height: 25),
                           ],
                         ),
-                        Divider(height: 25),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                customText(
-                                  "20",
-                                  fontFamily: kFontBold,
-                                ),
-                                SizedBox(height: 4),
-                                customText("Students",
-                                    textColor: kSecondaryColor),
-                              ],
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  customText(
-                                    "51",
-                                    fontFamily: kFontBold,
-                                  ),
-                                  SizedBox(height: 4),
-                                  customText("Lectures",
-                                      textColor: kSecondaryColor),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
-                              child: customText(petCards[index].yearsOld,
-                                  textColor: kWhite),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        PetDescriptionPills(label: 'Age', value: '2'),
+                        PetDescriptionPills(label: 'Sex', value: 'Male'),
+                        PetDescriptionPills(label: 'Color', value: 'Black'),
+                        PetDescriptionPills(label: 'Length', value: '2.2m'),
+                      ])
                 ],
               ),
             ),
@@ -153,32 +127,41 @@ class _FavouritesState extends State<Favourites> {
 
     return SafeArea(
       child: Scaffold(
-          body: ListView(
-        shrinkWrap: true,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(left: 8),
-            alignment: Alignment.centerLeft,
-            width: MediaQuery.of(context).size.width,
-            height: 50,
-            child: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: kPrimaryColor,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
+          body: Stack(
+        children: [
           SingleChildScrollView(
-            child: Column(
+            padding: EdgeInsets.only(top: 30, left: 2, right: 2),
+            physics: ScrollPhysics(),
+            child: ListView(
+              shrinkWrap: true,
               children: <Widget>[
-                topView,
-                cardList,
+                Container(
+                  padding: EdgeInsets.only(left: 8),
+                  alignment: Alignment.centerLeft,
+                  width: MediaQuery.of(context).size.width,
+                  height: 50,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: kPrimaryColor,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      topView,
+                      cardList,
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
+          TopAppBar('Favourites')
         ],
       )),
     );
@@ -200,5 +183,15 @@ class _FavouritesState extends State<Favourites> {
             : [BoxShadow(color: Colors.transparent)],
         border: Border.all(color: color),
         borderRadius: BorderRadius.all(Radius.circular(radius)));
+  }
+
+  Future<bool> onLikeButtonTapped(bool isLiked) async {
+    /// send your request here
+    // final bool success= await sendRequest();
+
+    /// if failed, you can do nothing
+    // return success? !isLiked:isLiked;
+
+    return !isLiked;
   }
 }
