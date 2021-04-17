@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
+import 'package:paw/components/AppButton.dart';
 import 'package:paw/constants.dart';
 import 'package:paw/utilities/utilities.dart';
 
@@ -220,47 +221,5 @@ class PetDescriptionPills extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class AppButton extends StatefulWidget {
-  var textContent;
-  VoidCallback onPressed;
-
-  AppButton({@required this.textContent, @required this.onPressed});
-
-  @override
-  State<StatefulWidget> createState() {
-    return AppButtonState();
-  }
-}
-
-class AppButtonState extends State<AppButton> {
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-        onPressed: widget.onPressed,
-        textColor: kFullWhite,
-        elevation: 4,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-        padding: const EdgeInsets.all(0.0),
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient:
-                LinearGradient(colors: <Color>[t10_gradient1, t10_gradient2]),
-            borderRadius: BorderRadius.all(Radius.circular(80.0)),
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-              child: Text(
-                widget.textContent,
-                style: TextStyle(fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ));
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:paw/components/AppButton.dart';
 import 'package:paw/components/CustomDropDown.dart';
 import 'package:paw/components/CustomTextField.dart';
 import 'package:paw/constants.dart';
 import 'package:paw/model/dropdown_model.dart';
+import 'package:paw/model/gender_model.dart';
 import 'package:paw/utilities/utilities.dart';
 
 class AddPost extends StatefulWidget {
@@ -12,30 +14,56 @@ class AddPost extends StatefulWidget {
 
 class _AddPostState extends State<AddPost> {
   final List<CategoryDropDownModel> _categoryDropDownModelList = [
-    CategoryDropDownModel(category: 'Pudding'),
-    CategoryDropDownModel(category: 'Frozen Yogurt'),
-    CategoryDropDownModel(category: 'Chocolate Milk'),
+    CategoryDropDownModel(id: 'cat', categoryName: 'Cat'),
+    CategoryDropDownModel(id: 'dog', categoryName: 'Dog'),
+    CategoryDropDownModel(id: 'fish', categoryName: 'Fish'),
+    CategoryDropDownModel(id: 'bunny', categoryName: 'Bunny'),
   ];
+  final List<GenderModel> _genderList = [
+    GenderModel(gender: 'Male'),
+    GenderModel(gender: 'Female')
+  ];
+
   CategoryDropDownModel _categoryDropDownModel = CategoryDropDownModel();
+  GenderModel _genderModel = GenderModel();
+
   List<DropdownMenuItem<CategoryDropDownModel>>
       _categoryDropDownModelDropdownList;
+  List<DropdownMenuItem<GenderModel>> _genderModelDropdownList;
+
   List<DropdownMenuItem<CategoryDropDownModel>>
-      _buildCategoryDropDownModelDropdown(List CategoryDropDownModelList) {
+      _buildCategoryDropDownModelDropdown(List categoryDropDownModelList) {
     List<DropdownMenuItem<CategoryDropDownModel>> items = List();
-    for (CategoryDropDownModel CategoryDropDownModel
-        in CategoryDropDownModelList) {
+    for (CategoryDropDownModel categoryDropDownModel
+        in categoryDropDownModelList) {
       items.add(DropdownMenuItem(
-        value: CategoryDropDownModel,
-        child: Text(CategoryDropDownModel.category),
+        value: categoryDropDownModel,
+        child: Text(categoryDropDownModel.categoryName),
       ));
     }
     return items;
   }
 
-  _onChangeFavouriteFoodModelDropdown(
-      CategoryDropDownModel favouriteFoodModel) {
+  List<DropdownMenuItem<GenderModel>> _buildGenderDropDown(
+      List genderDropdownList) {
+    List<DropdownMenuItem<GenderModel>> items = List();
+
+    for (GenderModel genderModel in genderDropdownList) {
+      items.add(DropdownMenuItem(
+          value: genderModel, child: Text(genderModel.gender)));
+    }
+    return items;
+  }
+
+  _onChangeCategoryModelDropdown(CategoryDropDownModel category) {
     setState(() {
-      _categoryDropDownModel = favouriteFoodModel;
+      _categoryDropDownModel = category;
+    });
+  }
+
+  _onChangeGenderDropDown(GenderModel gender) {
+    setState(() {
+      _genderModel = gender;
     });
   }
 
@@ -44,6 +72,10 @@ class _AddPostState extends State<AddPost> {
     _categoryDropDownModelDropdownList =
         _buildCategoryDropDownModelDropdown(_categoryDropDownModelList);
     _categoryDropDownModel = _categoryDropDownModelList[0];
+
+    _genderModelDropdownList = _buildGenderDropDown(_genderList);
+    _genderModel = _genderList[0];
+
     super.initState();
   }
 
@@ -73,13 +105,18 @@ class _AddPostState extends State<AddPost> {
                 height: 30,
               ),
               CustomTextField(fieldName: 'Pet Name'),
-              CustomDropDown(
-                // dropdownMenuItemList: _categoryDropDownModelDropdownList,
-                // onChanged: _onChangeFavouriteFoodModelDropdown,
-                // value: _categoryDropDownModel,
+              CustomDropdown(
+                dropdownMenuItemList: _categoryDropDownModelDropdownList,
+                onChanged: _onChangeCategoryModelDropdown,
+                value: _categoryDropDownModel,
                 isEnabled: true,
               ),
-              CustomTextField(fieldName: 'Sex'),
+              CustomDropdown(
+                dropdownMenuItemList: _genderModelDropdownList,
+                onChanged: _onChangeGenderDropDown,
+                value: _genderModel,
+                isEnabled: true,
+              ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 40),
                 child: Row(
@@ -94,6 +131,7 @@ class _AddPostState extends State<AddPost> {
                     CustomTextField(
                       fieldName: 'year old',
                       width: size.width / 3,
+                      isDigit: true,
                     ),
                   ],
                 ),
@@ -111,14 +149,25 @@ class _AddPostState extends State<AddPost> {
                     ),
                     CustomTextField(
                       fieldName: 'weight',
+                      isDigit: true,
                       width: size.width / 3,
                     ),
                   ],
                 ),
               ),
               CustomTextField(
-                fieldName: 'pet Story',
+                fieldName: 'Tell us your pet story',
+                isMultiLine: true,
               ),
+              Padding(
+                padding: const EdgeInsets.all(kDefaultPadding * 1.2),
+                child: AppButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'messages');
+                  },
+                  textContent: "Set up Adoption",
+                ),
+              )
             ],
           ),
         ),

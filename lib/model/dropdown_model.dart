@@ -1,5 +1,8 @@
 class CategoryDropDownModel {
-  final String category;
-
-  CategoryDropDownModel({this.category});
+  final String id;
+  final String categoryName;
+  CategoryDropDownModel({
+    this.id,
+    this.categoryName,
+  });
 }

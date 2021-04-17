@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:paw/constants.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -7,6 +8,8 @@ class CustomTextField extends StatelessWidget {
       this.width,
       this.controllerText,
       this.onChange,
+      this.isDigit = false,
+      this.isMultiLine = false,
       this.validator});
 
   final double width;
@@ -14,6 +17,8 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controllerText;
   final Function onChange;
   final Function validator;
+  final bool isDigit;
+  final bool isMultiLine;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +35,10 @@ class CustomTextField extends StatelessWidget {
         validator: validator,
         onChanged: onChange,
         style: TextStyle(fontFamily: kFontMedium),
+        keyboardType: isDigit ? TextInputType.number : TextInputType.name,
+        maxLines: isMultiLine ? 5 : null,
+        inputFormatters:
+            isDigit ? [WhitelistingTextInputFormatter.digitsOnly] : [],
         decoration: InputDecoration(
           hintText: fieldName,
           enabledBorder: OutlineInputBorder(
