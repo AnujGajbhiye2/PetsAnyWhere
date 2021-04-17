@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:paw/components/AppButton.dart';
 import 'package:paw/components/CustomDropDown.dart';
 import 'package:paw/components/CustomTextField.dart';
+import 'package:paw/components/TopAppBar.dart';
 import 'package:paw/constants.dart';
 import 'package:paw/model/dropdown_model.dart';
 import 'package:paw/model/gender_model.dart';
@@ -83,94 +84,99 @@ class _AddPostState extends State<AddPost> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: SafeArea(
+              child: Column(
                 children: [
-                  customText('Add Post',
-                      isCentered: true,
-                      textColor: kBlack,
-                      fontFamily: kFontBold,
-                      fontSize: kTextSizeLarge),
-                  Image.asset(
-                    'assets/pet-group.png',
-                    height: size.height / 5,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      customText('Add Post',
+                          isCentered: true,
+                          textColor: kBlack,
+                          fontFamily: kFontBold,
+                          fontSize: kTextSizeLarge),
+                      Image.asset(
+                        'assets/pet-group.png',
+                        height: size.height / 5,
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  CustomTextField(fieldName: 'Pet Name'),
+                  CustomDropdown(
+                    dropdownMenuItemList: _categoryDropDownModelDropdownList,
+                    onChanged: _onChangeCategoryModelDropdown,
+                    value: _categoryDropDownModel,
+                    isEnabled: true,
+                  ),
+                  CustomDropdown(
+                    dropdownMenuItemList: _genderModelDropdownList,
+                    onChanged: _onChangeGenderDropDown,
+                    value: _genderModel,
+                    isEnabled: true,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 40),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: CustomTextField(
+                            fieldName: 'Breed',
+                            width: size.width / 2.5,
+                          ),
+                        ),
+                        CustomTextField(
+                          fieldName: 'year old',
+                          width: size.width / 3,
+                          isDigit: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 40),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: CustomTextField(
+                            fieldName: 'color',
+                            width: size.width / 2.5,
+                          ),
+                        ),
+                        CustomTextField(
+                          fieldName: 'weight',
+                          isDigit: true,
+                          width: size.width / 3,
+                        ),
+                      ],
+                    ),
+                  ),
+                  CustomTextField(
+                    fieldName: 'Tell us your pet story',
+                    isMultiLine: true,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(kDefaultPadding * 1.2),
+                    child: AppButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'messages');
+                      },
+                      textContent: "Set up Adoption",
+                    ),
                   )
                 ],
               ),
-              SizedBox(
-                height: 30,
-              ),
-              CustomTextField(fieldName: 'Pet Name'),
-              CustomDropdown(
-                dropdownMenuItemList: _categoryDropDownModelDropdownList,
-                onChanged: _onChangeCategoryModelDropdown,
-                value: _categoryDropDownModel,
-                isEnabled: true,
-              ),
-              CustomDropdown(
-                dropdownMenuItemList: _genderModelDropdownList,
-                onChanged: _onChangeGenderDropDown,
-                value: _genderModel,
-                isEnabled: true,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 40),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: CustomTextField(
-                        fieldName: 'Breed',
-                        width: size.width / 2.5,
-                      ),
-                    ),
-                    CustomTextField(
-                      fieldName: 'year old',
-                      width: size.width / 3,
-                      isDigit: true,
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 40),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: CustomTextField(
-                        fieldName: 'color',
-                        width: size.width / 2.5,
-                      ),
-                    ),
-                    CustomTextField(
-                      fieldName: 'weight',
-                      isDigit: true,
-                      width: size.width / 3,
-                    ),
-                  ],
-                ),
-              ),
-              CustomTextField(
-                fieldName: 'Tell us your pet story',
-                isMultiLine: true,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(kDefaultPadding * 1.2),
-                child: AppButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'messages');
-                  },
-                  textContent: "Set up Adoption",
-                ),
-              )
-            ],
+            ),
           ),
-        ),
+          TopAppBar('')
+        ],
       ),
     );
   }

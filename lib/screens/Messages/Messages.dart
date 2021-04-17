@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:paw/components/TopAppBar.dart';
 import 'package:paw/model/messages_model.dart';
 import 'package:paw/constants.dart';
 import 'package:paw/utilities/utilities.dart';
@@ -81,94 +82,102 @@ class _MessagesState extends State<Messages> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
-        title: customText('Messages',
-            fontFamily: kFontBold, fontSize: kTextSizeNormal),
-      ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ListView.builder(
-                  itemCount: personalChats == null ? 0 : personalChats.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            children: [
-                              ListTile(
-                                leading: CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage: NetworkImage(
-                                      personalChats[index].profileImage),
-                                ),
-                                title: customText(personalChats[index].name,
-                                    fontFamily: kFontBold,
-                                    fontSize: kTextSizeLargeMedium),
-                                subtitle: customText(
-                                    personalChats[index].message,
-                                    isOverFlow: true,
-                                    maxLine: 1,
-                                    fontFamily: kFontMedium,
-                                    fontSize: kTextSizeSMedium),
-                                trailing: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    customText(personalChats[index].time,
-                                        fontSize: kTextSizeSMedium),
-                                    personalChats[index].pendingMessages != null
-                                        ? Container(
-                                            margin:
-                                                const EdgeInsets.only(top: 5.0),
-                                            height: 22,
-                                            width: 22,
-                                            decoration: BoxDecoration(
-                                                color: sdSecondaryColorRed,
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(25.0),
-                                                )),
-                                            child: Center(
-                                              child: Text(
-                                                personalChats[index]
-                                                    .pendingMessages,
-                                                style: primaryTextStyle(
-                                                    size: 11,
-                                                    textColor: Colors.white),
-                                              ),
-                                            ),
-                                          )
-                                        : SizedBox(),
-                                  ],
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatRoom(
-                                        name: personalChats[index].name,
-                                        profileImages:
-                                            personalChats[index].profileImage,
-                                      ),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: EdgeInsets.only(top: 70, left: 2, right: 2),
+              child: Column(
+                children: [
+                  ListView.builder(
+                      itemCount:
+                          personalChats == null ? 0 : personalChats.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (BuildContext context, int index) {
+                        return Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    leading: CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage: NetworkImage(
+                                          personalChats[index].profileImage),
                                     ),
-                                  );
-                                },
+                                    title: customText(personalChats[index].name,
+                                        fontFamily: kFontBold,
+                                        fontSize: kTextSizeLargeMedium),
+                                    subtitle: customText(
+                                        personalChats[index].message,
+                                        isOverFlow: true,
+                                        maxLine: 1,
+                                        fontFamily: kFontMedium,
+                                        fontSize: kTextSizeSMedium),
+                                    trailing: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        customText(personalChats[index].time,
+                                            fontSize: kTextSizeSMedium),
+                                        personalChats[index].pendingMessages !=
+                                                null
+                                            ? Container(
+                                                margin: const EdgeInsets.only(
+                                                    top: 5.0),
+                                                height: 22,
+                                                width: 22,
+                                                decoration: BoxDecoration(
+                                                    color: sdSecondaryColorRed,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(25.0),
+                                                    )),
+                                                child: Center(
+                                                  child: Text(
+                                                    personalChats[index]
+                                                        .pendingMessages,
+                                                    style: primaryTextStyle(
+                                                        size: 11,
+                                                        textColor:
+                                                            Colors.white),
+                                                  ),
+                                                ),
+                                              )
+                                            : SizedBox(),
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatRoom(
+                                            name: personalChats[index].name,
+                                            profileImages: personalChats[index]
+                                                .profileImage,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  Divider(
+                                    color: kDividerColor,
+                                    height: 2,
+                                  )
+                                ],
                               ),
-                              Divider(
-                                color: kDividerColor,
-                                height: 2,
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    );
-                  })
-            ],
-          ),
+                            )
+                          ],
+                        );
+                      })
+                ],
+              ),
+            ),
+            TopAppBar('Messages')
+          ],
         ),
       ),
     );
