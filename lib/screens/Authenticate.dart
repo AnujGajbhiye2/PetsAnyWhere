@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,14 +13,17 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
+  GoogleSignInAccount _currentUser;
   bool isSuccess = false;
   String name = 'UserName';
   String email = 'EmailId';
   var photoUrl = '';
 
-  void onSignInTap() async {
-    GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
+  GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: <String>['email'],
+  );
 
+  void onSignInTap() async {
     await googleSignIn.signIn().then((res) async {
       await res.authentication.then((accessToken) async {
         setState(() {
@@ -27,6 +32,8 @@ class _AuthenticateState extends State<Authenticate> {
           email = res.email;
           photoUrl = res.photoUrl;
           print(email);
+          saveUser(res);
+          Navigator.pushNamed(context, 'homeScreen');
         });
         print('Access Token : ${accessToken.accessToken.toString()}');
       }).catchError((error) {
@@ -41,6 +48,31 @@ class _AuthenticateState extends State<Authenticate> {
         throw (error.toString());
       });
     });
+  }
+
+  Future saveUser(_currentUser) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userData = new Map<String, dynamic>();
+    userData['name'] = _currentUser.displayName;
+    userData['email'] = _currentUser.email;
+    userData['photoUrl'] = _currentUser.photoUrl;
+
+    await prefs.setString('user', json.encode(userData));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      setState(() {
+        _currentUser = account;
+        saveUser(_currentUser);
+      });
+      if (_currentUser != null) {
+        Navigator.pushNamed(context, 'homeScreen');
+      }
+    });
+    googleSignIn.signInSilently();
   }
 
   @override
@@ -152,7 +184,10 @@ class _AuthenticateState extends State<Authenticate> {
                             color: kWhite,
                           ),
                           color: Color.fromRGBO(66, 103, 178, 1),
-                          onPressed: () {},
+                          onPressed: () {
+                            print('i am here');
+                            //Navigator.pushNamed(context, 'signIn');
+                          },
                         ),
                       )
                     ],

@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:paw/constants.dart';
 import 'package:paw/utilities/utilities.dart';
 
@@ -11,11 +16,32 @@ class SideMenuDrawer extends StatefulWidget {
   _SideMenuDrawerState createState() => _SideMenuDrawerState();
 }
 
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  // Optional clientId
+  // clientId: '479882132969-9i9aqik3jfjd7qhci1nqf0bm2g71rm1u.apps.googleusercontent.com',
+  scopes: <String>[
+    'email',
+  ],
+);
+
 class _SideMenuDrawerState extends State<SideMenuDrawer> {
   var selectedItem = -1;
+  String email = '';
+  String name = '';
+  String photoUrl = '';
+
+  Future checkUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = jsonDecode(prefs.getString('user'))['name'];
+      email = jsonDecode(prefs.getString('user'))['email'];
+      photoUrl = jsonDecode(prefs.getString('user'))['photoUrl'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    checkUser();
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.85,
       height: MediaQuery.of(context).size.height,
@@ -40,7 +66,8 @@ class _SideMenuDrawerState extends State<SideMenuDrawer> {
                     child: Row(
                       children: [
                         CircleAvatar(
-                          backgroundImage: NetworkImage(kNetworkImg),
+                          backgroundImage: NetworkImage(photoUrl ??
+                              kNetworkImg + name.replaceAll(' ', '+')),
                           radius: 40,
                         ),
                         SizedBox(width: 16),
@@ -50,12 +77,12 @@ class _SideMenuDrawerState extends State<SideMenuDrawer> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                customText('Anuj Gajbhiye',
+                                customText(name,
                                     textColor: kWhite,
                                     fontFamily: kFontBold,
                                     fontSize: kTextSizeNormal),
                                 SizedBox(height: 8),
-                                customText('anujgajbhiye97@gmail.com',
+                                customText(email,
                                     textColor: kWhite,
                                     fontFamily: kFontBold,
                                     fontSize: kTextSizeSmall),
@@ -130,6 +157,10 @@ class _SideMenuDrawerState extends State<SideMenuDrawer> {
               } else {
                 Navigator.of(context).pop();
               }
+              break;
+            case 'Sign Out':
+              _googleSignIn.disconnect();
+              Navigator.pushNamed(context, 'auth');
               break;
             case 'Help and Feedback':
               if (currentRoute != 'helpAndSupport') {
