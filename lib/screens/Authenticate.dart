@@ -1,9 +1,48 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:paw/constants.dart';
 
-class Authenticate extends StatelessWidget {
+class Authenticate extends StatefulWidget {
+  @override
+  _AuthenticateState createState() => _AuthenticateState();
+}
+
+class _AuthenticateState extends State<Authenticate> {
+  bool isSuccess = false;
+  String name = 'UserName';
+  String email = 'EmailId';
+  var photoUrl = '';
+
+  void onSignInTap() async {
+    GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
+
+    await googleSignIn.signIn().then((res) async {
+      await res.authentication.then((accessToken) async {
+        setState(() {
+          isSuccess = true;
+          name = res.displayName;
+          email = res.email;
+          photoUrl = res.photoUrl;
+          print(email);
+        });
+        print('Access Token : ${accessToken.accessToken.toString()}');
+      }).catchError((error) {
+        isSuccess = false;
+        toast(error.toString());
+        setState(() {});
+        throw (error.toString());
+      }).catchError((error) {
+        isSuccess = false;
+        toast(error.toString());
+        setState(() {});
+        throw (error.toString());
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -93,7 +132,9 @@ class Authenticate extends StatelessWidget {
                             color: kWhite,
                           ),
                           color: Color.fromRGBO(219, 68, 55, 1),
-                          onPressed: () {},
+                          onPressed: () {
+                            onSignInTap();
+                          },
                         ),
                       ),
                       SizedBox(

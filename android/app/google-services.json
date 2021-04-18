@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:914969215893:android:ea1e0f7f1ad7dd1f7aac9c",
+        "mobilesdk_app_id": "1:914969215893:android:356235b45bffc6d17aac9c",
         "android_client_info": {
           "package_name": "com.petsanywhere.paw"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "914969215893-05ejk93cef11r2kj06pg5o8gvgs24due.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.petsanywhere.paw",
+            "certificate_hash": "ad029f4b18605a119e8939185df3a7949a5b82f1"
+          }
+        },
         {
           "client_id": "914969215893-ib6g4j3b1i5c7ff03rv3tu4er55b136e.apps.googleusercontent.com",
           "client_type": 3

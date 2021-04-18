@@ -16,161 +16,165 @@ class _PetDetailSccreen2State extends State<PetDetailSccreen2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kPrimaryColor,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            physics: ScrollPhysics(),
-            child: Container(
-              child: Column(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.width * 0.8,
-                    child: CachedNetworkImage(
-                      imageUrl: doggoImg,
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.width * 0.5,
-                      fit: BoxFit.fill,
+      backgroundColor: kFullWhite,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              physics: ScrollPhysics(),
+              child: Container(
+                child: Column(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.width * 0.8,
+                      child: CachedNetworkImage(
+                        imageUrl: doggoImg,
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.width * 0.5,
+                        fit: BoxFit.fill,
+                      ),
                     ),
-                  ),
-                  // expanded was here
-                  Container(
-                    color: kFullWhite,
-                    // height: MediaQuery.of(context).size.height -
-                    //     MediaQuery.of(context).size.width * 1.1,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(18.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                children: [
-                                  customText("Little Darlene",
-                                      textColor: kTextColorPrimary,
-                                      fontSize: kTextSizeLarge,
-                                      fontFamily: kFontBold),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 18.0),
-                                    child: customText(
-                                        "Labrador retriever puppy",
-                                        fontSize: kTextSizeSMedium,
-                                        textColor: kTextColorSecondary),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(right: 20),
-                                alignment: Alignment.centerRight,
-                                child: LikeButton(
-                                  size: 25.0,
-                                  onTap: onLikeButtonTapped,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            PetDescriptionPills(
-                              attribute: "Age",
-                              value: "2",
-                            ),
-                            PetDescriptionPills(
-                              attribute: "Sex",
-                              value: "Female",
-                            ),
-                            PetDescriptionPills(
-                              attribute: "Color",
-                              value: "Black",
-                            ),
-                            PetDescriptionPills(
-                              attribute: "Weight",
-                              value: "2 Kg",
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 25, left: 15),
-                          child: Container(
-                            padding: EdgeInsets.fromLTRB(10, 15, 10, 15),
-                            decoration: BoxDecoration(
-                                // color: Color(0XFF5959fc),
-                                color: Color(0XFFFEF2D1),
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20.0),
-                                    topLeft: Radius.circular(20.0))),
+                    // expanded was here
+                    Container(
+                      color: kFullWhite,
+                      // height: MediaQuery.of(context).size.height -
+                      //     MediaQuery.of(context).size.width * 1.1,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(18.0),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage(kNetworkImg),
-                                  radius: 20,
-                                ),
-                                SizedBox(width: 16),
-                                Expanded(
-                                  child: Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        customText('Anuj Gajbhiye',
-                                            textColor: kTextColorPrimary,
-                                            fontFamily: kFontBold,
-                                            fontSize: kTextSizeLargeMedium),
-                                        SizedBox(height: 4),
-                                        customText('Owner',
-                                            textColor: kSecondaryColor,
-                                            fontFamily: kFontBold,
-                                            fontSize: kTextSizeSmall),
-                                      ],
+                                Column(
+                                  children: [
+                                    customText("Little Darlene",
+                                        textColor: kTextColorPrimary,
+                                        fontSize: kTextSizeLarge,
+                                        fontFamily: kFontBold),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 18.0),
+                                      child: customText(
+                                          "Labrador retriever puppy",
+                                          fontSize: kTextSizeSMedium,
+                                          textColor: kTextColorSecondary),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                                customText("1.64 Km ",
-                                    textColor: kSecondaryColor,
-                                    fontFamily: kFontBold,
-                                    fontSize: kTextSizeMedium)
+                                Container(
+                                  margin: EdgeInsets.only(right: 20),
+                                  alignment: Alignment.centerRight,
+                                  child: LikeButton(
+                                    size: 25.0,
+                                    onTap: onLikeButtonTapped,
+                                  ),
+                                )
                               ],
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                              kDefaultPadding * 1.2,
-                              kDefaultPadding * 1.2,
-                              kDefaultPadding * 1.2,
-                              0),
-                          child: customText(kDemoText,
-                              isLongText: true,
-                              fontSize: kTextSizeMedium,
-                              textColor: kTextColorPrimary,
-                              fontFamily: kFontMedium),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(kDefaultPadding * 1.2),
-                          child: AppButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, 'messages');
-                            },
-                            textContent: "Adopt Now",
+                          SizedBox(
+                            height: 4,
                           ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              PetDescriptionPills(
+                                attribute: "Age",
+                                value: "2",
+                              ),
+                              PetDescriptionPills(
+                                attribute: "Sex",
+                                value: "Female",
+                              ),
+                              PetDescriptionPills(
+                                attribute: "Color",
+                                value: "Black",
+                              ),
+                              PetDescriptionPills(
+                                attribute: "Weight",
+                                value: "2 Kg",
+                              )
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 25, left: 15),
+                            child: Container(
+                              padding: EdgeInsets.fromLTRB(10, 15, 10, 15),
+                              decoration: BoxDecoration(
+                                  // color: Color(0XFF5959fc),
+                                  color: Color(0XFFFEF2D1),
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(20.0),
+                                      topLeft: Radius.circular(20.0))),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(kNetworkImg),
+                                    radius: 20,
+                                  ),
+                                  SizedBox(width: 16),
+                                  Expanded(
+                                    child: Container(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          customText('Anuj Gajbhiye',
+                                              textColor: kTextColorPrimary,
+                                              fontFamily: kFontBold,
+                                              fontSize: kTextSizeLargeMedium),
+                                          SizedBox(height: 4),
+                                          customText('Owner',
+                                              textColor: kSecondaryColor,
+                                              fontFamily: kFontBold,
+                                              fontSize: kTextSizeSmall),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  customText("1.64 Km ",
+                                      textColor: kSecondaryColor,
+                                      fontFamily: kFontBold,
+                                      fontSize: kTextSizeMedium)
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kDefaultPadding * 1.2,
+                                kDefaultPadding * 1.2,
+                                kDefaultPadding * 1.2,
+                                0),
+                            child: customText(kDemoText,
+                                isLongText: true,
+                                fontSize: kTextSizeMedium,
+                                textColor: kTextColorPrimary,
+                                fontFamily: kFontMedium),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.all(kDefaultPadding * 1.2),
+                            child: AppButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, 'messages');
+                              },
+                              textContent: "Adopt Now",
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          TopAppBar('')
-        ],
+            TopAppBar('')
+          ],
+        ),
       ),
     );
   }
