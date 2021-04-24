@@ -36,7 +36,6 @@ class _SideMenuDrawerState extends State<SideMenuDrawer> {
       name = jsonDecode(prefs.getString('user'))['name'];
       email = jsonDecode(prefs.getString('user'))['email'];
       photoUrl = jsonDecode(prefs.getString('user'))['photoUrl'];
-      print(photoUrl);
     });
   }
 
@@ -162,6 +161,7 @@ class _SideMenuDrawerState extends State<SideMenuDrawer> {
               }
               break;
             case 'Sign Out':
+              clearSharedPref();
               _googleSignIn.disconnect();
               Navigator.pushNamed(context, 'auth');
               break;
