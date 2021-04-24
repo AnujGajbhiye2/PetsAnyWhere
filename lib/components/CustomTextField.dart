@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:paw/constants.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   CustomTextField(
       {@required this.fieldName,
       this.width,
@@ -20,18 +20,23 @@ class CustomTextField extends StatelessWidget {
   final String keyboardType;
   final bool isMultiLine;
 
+  @override
+  _CustomTextFieldState createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
   TextInputType keyboard;
 
   setKeyboardType() {
-    if (this.keyboardType == '') {
+    if (this.widget.keyboardType == '') {
       keyboard = TextInputType.name;
-    } else if (this.keyboardType == 'number') {
+    } else if (this.widget.keyboardType == 'number') {
       keyboard = TextInputType.number;
-    } else if (keyboardType == 'email') {
+    } else if (widget.keyboardType == 'email') {
       keyboard = TextInputType.emailAddress;
-    } else if (keyboardType == 'password') {
+    } else if (widget.keyboardType == 'password') {
       keyboard = TextInputType.visiblePassword;
-    } else if (keyboardType == 'phone') {
+    } else if (widget.keyboardType == 'phone') {
       keyboard = TextInputType.phone;
     }
   }
@@ -43,26 +48,26 @@ class CustomTextField extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
 //      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      width: width ?? size.width * 0.8,
+      width: widget.width ?? size.width * 0.8,
 
       child: TextFormField(
         textInputAction: TextInputAction.next,
         onEditingComplete: () => FocusScope.of(context).nextFocus(),
-        controller: controllerText,
-        validator: validator,
-        onChanged: onChange,
+        controller: widget.controllerText,
+        validator: widget.validator,
+        onChanged: widget.onChange,
         style: TextStyle(fontFamily: kFontMedium),
-        textCapitalization: keyboardType == ''
+        textCapitalization: widget.keyboardType == ''
             ? TextCapitalization.words
             : TextCapitalization.none,
         keyboardType: keyboard,
-        obscureText: keyboardType == 'password' ? true : false,
-        maxLines: isMultiLine ? 5 : 1,
+        obscureText: widget.keyboardType == 'password' ? true : false,
+        maxLines: widget.isMultiLine ? 5 : 1,
         inputFormatters: keyboard == TextInputType.number
             ? [WhitelistingTextInputFormatter.digitsOnly]
             : [],
         decoration: InputDecoration(
-          hintText: fieldName,
+          hintText: widget.fieldName,
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: kBlack)),
