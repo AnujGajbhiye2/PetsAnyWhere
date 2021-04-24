@@ -1,11 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
 import 'package:paw/components/BottomWoofButton.dart';
 import 'package:paw/components/CustomTextField.dart';
 import 'package:paw/environment/Strings.dart' as env;
 import 'package:paw/model/signIn_model.dart';
+import 'package:paw/utilities/loader.dart';
 
 import '../constants.dart';
 
@@ -18,22 +20,6 @@ class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
 
   UserIdPass user = UserIdPass('', '');
-
-  Future save() async {
-    const spinkit = SpinKitRotatingCircle(
-      color: Colors.white,
-      size: 50.0,
-    );
-    var res = await http.post(env.dev_API_LINK + '/signIn',
-        headers: <String, String>{
-          'Context-Type': 'application/json;charSet=UTF-8'
-        },
-        body: <String, String>{
-          'email': user.email,
-          'password': user.password
-        });
-    print(res.body);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,21 +121,52 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           ),
-          Expanded(
-            child: BottomWoofButton(
-                btnText: 'meow',
-                isBack: true,
-                onPress: () {
-                  if (_formKey.currentState.validate()) {
-//                      save();
-                    // Navigator.pushNamed(context, 'homeScreen');
-                  } else {
-                    toast('galat hain be');
-                  }
-                }),
-          )
+          BottomWoofButton(
+              btnText: 'meow',
+              isBack: true,
+              onPress: () {
+                if (_formKey.currentState.validate()) {
+                  login();
+                  // Navigator.pushNamed(context, 'homeScreen');
+                } else {
+                  toast('galat hain be');
+                }
+              })
         ],
       ),
     );
+  }
+
+  Future login() async {
+    try {
+      LoadingOverlay.of(context).show();
+      final response = await http.post(env.login, headers: <String, String>{
+        'Context-Type': 'application/json;charSet=UTF-8'
+      }, body: <String, String>{
+        'email': user.email,
+        'password': user.password
+      }).catchError((onError) => toast(onError.toString()));
+
+      Map<String, dynamic> responseJson = json.decode(response.body);
+      if (responseJson['success']) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        var userData = new Map<String, dynamic>();
+        userData['name'] = responseJson['user']['name'];
+        userData['_id'] = responseJson['user']['_id'];
+        userData['email'] = responseJson['user']['email'];
+        userData['phone'] = responseJson['user']['phone'];
+
+        await prefs.setString('user', json.encode(userData));
+        LoadingOverlay.of(context).hide();
+        Navigator.pushNamed(context, 'homeScreen');
+      } else {
+        toast(responseJson['errMessage']);
+        LoadingOverlay.of(context).hide();
+      }
+      // LoadingOverlay.of(context).hide();
+    } catch (e) {
+      print(e);
+      LoadingOverlay.of(context).hide();
+    }
   }
 }

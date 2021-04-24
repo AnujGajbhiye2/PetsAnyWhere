@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
+import 'package:paw/environment/Strings.dart' as env;
 import 'package:paw/components/BottomWoofButton.dart';
 import 'package:paw/components/CustomTextField.dart';
 import 'package:paw/constants.dart';
 import 'package:paw/model/signup_model.dart';
+import 'package:paw/utilities/loader.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -12,6 +17,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  bool _isLoading = false;
   final double height = AppBar().preferredSize.height;
 
   final _formkey = GlobalKey<FormState>();
@@ -40,7 +46,7 @@ class _SignUpState extends State<SignUp> {
                         CustomTextField(
                           fieldName: 'full name',
                           onChange: (value) {
-                            reg.name = value;
+                            reg.name = value.trim();
                           },
                           controllerText: TextEditingController(text: reg.name),
                           validator: (String value) {
@@ -57,7 +63,7 @@ class _SignUpState extends State<SignUp> {
                             fieldName: 'email address',
                             keyboardType: 'email',
                             onChange: (value) {
-                              reg.email = value;
+                              reg.email = value.trim();
                             },
                             controllerText:
                                 TextEditingController(text: reg.email),
@@ -76,7 +82,7 @@ class _SignUpState extends State<SignUp> {
                           fieldName: 'password',
                           keyboardType: 'password',
                           onChange: (value) {
-                            reg.password = value;
+                            reg.password = value.trim();
                           },
                           controllerText:
                               TextEditingController(text: reg.password),
@@ -94,7 +100,7 @@ class _SignUpState extends State<SignUp> {
                           fieldName: 'phone number',
                           keyboardType: 'phone',
                           onChange: (value) {
-                            reg.phone = value;
+                            reg.phone = value.trim();
                           },
                           controllerText:
                               TextEditingController(text: reg.phone),
@@ -146,25 +152,57 @@ class _SignUpState extends State<SignUp> {
               ),
             ),
           ),
-          Expanded(
-            child: BottomWoofButton(
-              btnText: 'meow',
-              isBack: true,
+          BottomWoofButton(
+            btnText: 'meow',
+            isBack: true,
 //                goto: 'otp',
-              onPress: () {
-                if (_formkey.currentState.validate()) {
-                  // truthy condition
-                  registerUser();
-                } else {
-                  //falsy condition
-                }
-              },
-            ),
+            onPress: () {
+              if (_formkey.currentState.validate()) {
+                // truthy condition
+                registerUser();
+              } else {
+                //falsy condition
+              }
+            },
           )
         ],
       ),
     );
   }
 
-  registerUser() {}
+  Future registerUser() async {
+    try {
+      LoadingOverlay.of(context).show();
+      final response = await http.post(env.register, headers: <String, String>{
+        'Context-Type': 'application/json;charSet=UTF-8'
+      }, body: <String, String>{
+        'name': reg.name,
+        'email': reg.email,
+        'password': reg.password,
+        'phone': reg.phone
+      }).catchError((error) => toast(error.toString()));
+
+      Map<String, dynamic> responseJson = json.decode(response.body);
+      if (responseJson['success']) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        var userData = new Map<String, dynamic>();
+        userData['name'] = responseJson['user']['name'];
+        userData['_id'] = responseJson['user']['_id'];
+        userData['email'] = responseJson['user']['email'];
+        userData['phone'] = responseJson['user']['phone'];
+
+        await prefs.setString('user', json.encode(userData));
+        LoadingOverlay.of(context).hide();
+        Navigator.pushNamed(context, 'homeScreen');
+      } else {
+        toast(responseJson['errMessage']);
+        LoadingOverlay.of(context).hide();
+      }
+    } catch (e) {
+      LoadingOverlay.of(context).hide();
+
+      print(e);
+      toast(e);
+    }
+  }
 }
