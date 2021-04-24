@@ -44,6 +44,7 @@ class _SignInState extends State<SignIn> {
                         ),
                         CustomTextField(
                           fieldName: 'Email',
+                          keyboardType: 'email',
                           onChange: (value) {
                             user.email = value;
                           },
