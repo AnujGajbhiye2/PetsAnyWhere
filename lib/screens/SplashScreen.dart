@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:paw/screens/Authenticate.dart';
@@ -17,8 +18,12 @@ class SplashScreenState extends State<SplashScreen>
     bool _seen = (prefs.getBool('seen') ?? false);
 
     if (_seen) {
-      Navigator.of(context).pushReplacement(
-          new MaterialPageRoute(builder: (context) => new Authenticate()));
+      if (prefs.getString('user') != null) {
+        Navigator.of(context).pushNamed('homeScreen');
+      } else {
+        Navigator.of(context).pushReplacement(
+            new MaterialPageRoute(builder: (context) => new Authenticate()));
+      }
     } else {
       await prefs.setBool('seen', true);
       Navigator.of(context).pushReplacement(

@@ -134,7 +134,7 @@ class _AddPostState extends State<AddPost> {
                         CustomTextField(
                           fieldName: 'year old',
                           width: size.width / 3,
-                          isDigit: true,
+                          keyboardType: 'number',
                         ),
                       ],
                     ),
@@ -152,7 +152,7 @@ class _AddPostState extends State<AddPost> {
                         ),
                         CustomTextField(
                           fieldName: 'weight',
-                          isDigit: true,
+                          keyboardType: 'number',
                           width: size.width / 3,
                         ),
                       ],

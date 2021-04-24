@@ -30,12 +30,15 @@ class SignUp extends StatelessWidget {
                   ),
                   CustomTextField(
                     fieldName: 'email address',
+                    keyboardType: 'email',
                   ),
                   CustomTextField(
                     fieldName: 'password',
+                    keyboardType: 'password',
                   ),
                   CustomTextField(
                     fieldName: 'phone number',
+                    keyboardType: 'phone',
                   ),
                   SizedBox(
                     height: 20.0,

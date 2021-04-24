@@ -36,12 +36,15 @@ class _SideMenuDrawerState extends State<SideMenuDrawer> {
       name = jsonDecode(prefs.getString('user'))['name'];
       email = jsonDecode(prefs.getString('user'))['email'];
       photoUrl = jsonDecode(prefs.getString('user'))['photoUrl'];
+      print(photoUrl);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    checkUser();
+    if (email == "") {
+      checkUser();
+    }
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.85,
       height: MediaQuery.of(context).size.height,

@@ -8,7 +8,7 @@ class CustomTextField extends StatelessWidget {
       this.width,
       this.controllerText,
       this.onChange,
-      this.isDigit = false,
+      this.keyboardType = '',
       this.isMultiLine = false,
       this.validator});
 
@@ -17,13 +17,29 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controllerText;
   final Function onChange;
   final Function validator;
-  final bool isDigit;
+  final String keyboardType;
   final bool isMultiLine;
+
+  TextInputType keyboard;
+
+  setKeyboardType() {
+    if (this.keyboardType == '') {
+      keyboard = TextInputType.name;
+    } else if (this.keyboardType == 'number') {
+      keyboard = TextInputType.number;
+    } else if (keyboardType == 'email') {
+      keyboard = TextInputType.emailAddress;
+    } else if (keyboardType == 'password') {
+      keyboard = TextInputType.visiblePassword;
+    } else if (keyboardType == 'phone') {
+      keyboard = TextInputType.phone;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    setKeyboardType();
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
 //      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -31,14 +47,20 @@ class CustomTextField extends StatelessWidget {
 
       child: TextFormField(
         textInputAction: TextInputAction.next,
+        onEditingComplete: () => FocusScope.of(context).nextFocus(),
         controller: controllerText,
         validator: validator,
         onChanged: onChange,
         style: TextStyle(fontFamily: kFontMedium),
-        keyboardType: isDigit ? TextInputType.number : TextInputType.name,
-        maxLines: isMultiLine ? 5 : null,
-        inputFormatters:
-            isDigit ? [WhitelistingTextInputFormatter.digitsOnly] : [],
+        textCapitalization: keyboardType == ''
+            ? TextCapitalization.words
+            : TextCapitalization.none,
+        keyboardType: keyboard,
+        obscureText: keyboardType == 'password' ? true : false,
+        maxLines: isMultiLine ? 5 : 1,
+        inputFormatters: keyboard == TextInputType.number
+            ? [WhitelistingTextInputFormatter.digitsOnly]
+            : [],
         decoration: InputDecoration(
           hintText: fieldName,
           enabledBorder: OutlineInputBorder(

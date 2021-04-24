@@ -4,6 +4,7 @@ import 'package:paw/model/category_,model.dart';
 
 import '../constants.dart';
 
+// ignore: must_be_immutable
 class Category extends StatefulWidget {
   CategoryModel model;
   int position;
@@ -19,6 +20,7 @@ class Category extends StatefulWidget {
 
 class _CategoryState extends State<Category> {
   var selectedItem = -1;
+  var catArray = [false, false, false, false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,13 @@ class _CategoryState extends State<Category> {
       onTap: () {
         setState(() {
           this.selectedItem = widget.position;
+          for (var i = 0; i < catArray.length; i++) {
+            if (i == selectedItem) {
+              catArray[i] = true;
+            } else {
+              catArray[i] = false;
+            }
+          }
         });
       },
       child: Container(
@@ -54,8 +63,7 @@ class _CategoryState extends State<Category> {
             ),
             text(
               widget.model.name,
-              fontFamily:
-                  selectedItem == widget.position ? kFontBold : kFontLight,
+              fontFamily: catArray[widget.position] ? kFontBold : kFontLight,
             )
           ],
         ),
