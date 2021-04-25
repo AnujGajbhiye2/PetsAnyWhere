@@ -1,3 +1,9 @@
+import 'dart:convert';
+import 'dart:io' as IO;
+import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:http/http.dart' as http;
+import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:paw/environment/Strings.dart' as env;
 import 'package:flutter/material.dart';
 import 'package:paw/components/AppButton.dart';
 import 'package:paw/components/CustomDropDown.dart';
@@ -14,6 +20,10 @@ class AddPost extends StatefulWidget {
 }
 
 class _AddPostState extends State<AddPost> {
+  List<Asset> images = <Asset>[];
+  String _error = 'No Error Dectected';
+  final cloudinary = CloudinaryPublic('paw', 'paw_preset', cache: false);
+
   final List<CategoryDropDownModel> _categoryDropDownModelList = [
     CategoryDropDownModel(id: 'cat', categoryName: 'Cat'),
     CategoryDropDownModel(id: 'dog', categoryName: 'Dog'),
@@ -163,6 +173,31 @@ class _AddPostState extends State<AddPost> {
                     isMultiLine: true,
                   ),
                   Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: Row(
+                      children: [
+                        ButtonTheme(
+                          height: 50,
+                          minWidth: 50,
+                          child: FlatButton(
+                            color: Colors.grey[400],
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              loadAssets();
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        displayImages()
+                      ],
+                    ),
+                  ),
+                  Padding(
                     padding: const EdgeInsets.all(kDefaultPadding * 1.2),
                     child: AppButton(
                       onPressed: () {
@@ -179,5 +214,69 @@ class _AddPostState extends State<AddPost> {
         ],
       ),
     );
+  }
+
+  Future<void> loadAssets() async {
+    List<Asset> resultList = <Asset>[];
+    String error = 'No error detected';
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 4,
+        enableCamera: true,
+        selectedAssets: images,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+      );
+    } catch (e) {
+      error = e.toString();
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+      _error = error;
+    });
+  }
+
+  Widget displayImages() {
+    if (images.length > 0) {
+      return AssetThumb(
+        asset: images[0],
+        width: 30,
+        height: 30,
+      );
+    } else {
+      return Text('Upload your \n pet Images');
+    }
+  }
+
+  Widget buildGridView() {
+    return GridView.count(
+      crossAxisCount: 3,
+      children: List.generate(images.length, (index) {
+        Asset asset = images[index];
+        return AssetThumb(
+          asset: asset,
+          width: 30,
+          height: 30,
+        );
+      }),
+    );
+  }
+
+  Future uploadImage() async {
+    final images = await MultiImagePicker.pickImages(maxImages: 4);
+
+    List<CloudinaryResponse> uploaddedImages = await cloudinary.multiUpload(
+      images
+          .map(
+            (image) => CloudinaryFile.fromFutureByteData(image.getByteData(),
+                identifier: image.identifier),
+          )
+          .toList(),
+    );
+
+    print(uploaddedImages);
   }
 }
