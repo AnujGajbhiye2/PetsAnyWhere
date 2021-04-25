@@ -10,6 +10,7 @@ import 'package:paw/components/CustomDropDown.dart';
 import 'package:paw/components/CustomTextField.dart';
 import 'package:paw/components/TopAppBar.dart';
 import 'package:paw/constants.dart';
+import 'package:paw/model/addPost_model.dart';
 import 'package:paw/model/dropdown_model.dart';
 import 'package:paw/model/gender_model.dart';
 import 'package:paw/utilities/utilities.dart';
@@ -20,6 +21,9 @@ class AddPost extends StatefulWidget {
 }
 
 class _AddPostState extends State<AddPost> {
+  AddPostModel form = AddPostModel();
+  final _formKey = GlobalKey<FormState>();
+
   List<Asset> images = <Asset>[];
   String _error = 'No Error Dectected';
   final cloudinary = CloudinaryPublic('paw', 'paw_preset', cache: false);
@@ -69,12 +73,14 @@ class _AddPostState extends State<AddPost> {
   _onChangeCategoryModelDropdown(CategoryDropDownModel category) {
     setState(() {
       _categoryDropDownModel = category;
+      form.category = category.id;
     });
   }
 
   _onChangeGenderDropDown(GenderModel gender) {
     setState(() {
       _genderModel = gender;
+      form.gender = gender.gender;
     });
   }
 
@@ -98,115 +104,193 @@ class _AddPostState extends State<AddPost> {
         children: [
           SingleChildScrollView(
             child: SafeArea(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      customText('Add Post',
-                          isCentered: true,
-                          textColor: kBlack,
-                          fontFamily: kFontBold,
-                          fontSize: kTextSizeLarge),
-                      Image.asset(
-                        'assets/pet-group.png',
-                        height: size.height / 5,
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  CustomTextField(fieldName: 'Pet Name'),
-                  CustomDropdown(
-                    dropdownMenuItemList: _categoryDropDownModelDropdownList,
-                    onChanged: _onChangeCategoryModelDropdown,
-                    value: _categoryDropDownModel,
-                    isEnabled: true,
-                  ),
-                  CustomDropdown(
-                    dropdownMenuItemList: _genderModelDropdownList,
-                    onChanged: _onChangeGenderDropDown,
-                    value: _genderModel,
-                    isEnabled: true,
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 40),
-                    child: Row(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: CustomTextField(
-                            fieldName: 'Breed',
-                            width: size.width / 2.5,
-                          ),
-                        ),
-                        CustomTextField(
-                          fieldName: 'year old',
-                          width: size.width / 3,
-                          keyboardType: 'number',
-                        ),
+                        customText('Add Post',
+                            isCentered: true,
+                            textColor: kBlack,
+                            fontFamily: kFontBold,
+                            fontSize: kTextSizeLarge),
+                        Image.asset(
+                          'assets/pet-group.png',
+                          height: size.height / 5,
+                        )
                       ],
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 40),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: CustomTextField(
-                            fieldName: 'color',
-                            width: size.width / 2.5,
-                          ),
-                        ),
-                        CustomTextField(
-                          fieldName: 'weight',
-                          keyboardType: 'number',
-                          width: size.width / 3,
-                        ),
-                      ],
+                    SizedBox(
+                      height: 30,
                     ),
-                  ),
-                  CustomTextField(
-                    fieldName: 'Tell us your pet story',
-                    isMultiLine: true,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
-                    child: Row(
-                      children: [
-                        ButtonTheme(
-                          height: 50,
-                          minWidth: 50,
-                          child: FlatButton(
-                            color: Colors.grey[400],
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.white,
+                    CustomTextField(
+                      fieldName: 'Pet Name',
+                      onChange: (value) {
+                        form.petName = value;
+                      },
+                      controllerText: TextEditingController(text: form.petName),
+                      validator: (String value) {
+                        if (value.trim().isEmpty) {
+                          return 'your pet must be having a name 😸';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    CustomDropdown(
+                      dropdownMenuItemList: _categoryDropDownModelDropdownList,
+                      onChanged: _onChangeCategoryModelDropdown,
+                      value: _categoryDropDownModel,
+                      isEnabled: true,
+                    ),
+                    CustomDropdown(
+                      dropdownMenuItemList: _genderModelDropdownList,
+                      onChanged: _onChangeGenderDropDown,
+                      value: _genderModel,
+                      isEnabled: true,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 40),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 16),
+                            child: CustomTextField(
+                              fieldName: 'Breed',
+                              width: size.width / 2.5,
+                              onChange: (value) {
+                                form.breed = value;
+                              },
+                              controllerText:
+                                  TextEditingController(text: form.breed),
+                              validator: (String value) {
+                                if (value.trim().isEmpty) {
+                                  return 'breed is required 🦔';
+                                } else {
+                                  return null;
+                                }
+                              },
                             ),
-                            onPressed: () {
-                              loadAssets();
+                          ),
+                          CustomTextField(
+                            fieldName: 'year old',
+                            width: size.width / 3,
+                            keyboardType: 'number',
+                            onChange: (value) {
+                              form.age = value;
+                            },
+                            controllerText:
+                                TextEditingController(text: form.age),
+                            validator: (String value) {
+                              if (value.trim().isEmpty) {
+                                return 'age is required 🐥';
+                              } else if (int.parse(value) < 0) {
+                                return 'invalid age';
+                              } else {
+                                return null;
+                              }
                             },
                           ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        displayImages()
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(kDefaultPadding * 1.2),
-                    child: AppButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, 'messages');
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 40),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 16),
+                            child: CustomTextField(
+                              fieldName: 'color',
+                              width: size.width / 2.5,
+                              onChange: (value) {
+                                form.color = value;
+                              },
+                              controllerText:
+                                  TextEditingController(text: form.color),
+                              validator: (String value) {
+                                if (value.trim().isEmpty) {
+                                  return 'color of your pet is required 🐦';
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                          ),
+                          CustomTextField(
+                            fieldName: 'weight',
+                            keyboardType: 'number',
+                            width: size.width / 3,
+                            onChange: (value) {
+                              form.weight = value;
+                            },
+                            controllerText:
+                                TextEditingController(text: form.weight),
+                          ),
+                        ],
+                      ),
+                    ),
+                    CustomTextField(
+                      fieldName: 'Tell us your pet story',
+                      isMultiLine: true,
+                      onChange: (value) {
+                        form.petStory = value;
                       },
-                      textContent: "Set up Adoption",
+                      controllerText:
+                          TextEditingController(text: form.petStory),
+                      validator: (String value) {
+                        if (value.trim().isEmpty) {
+                          return 'tell us why you want to put your pet for adoption 😿';
+                        } else if (value.length < 100) {
+                          return 'please describe a little more 🙊';
+                        } else {
+                          return null;
+                        }
+                      },
                     ),
-                  )
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40.0),
+                      child: Row(
+                        children: [
+                          ButtonTheme(
+                            height: 50,
+                            minWidth: 50,
+                            child: FlatButton(
+                              color: Colors.grey[400],
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                loadAssets();
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          displayImages()
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(kDefaultPadding * 1.2),
+                      child: AppButton(
+                        onPressed: () {
+                          // Navigator.pushNamed(context, 'messages');
+                          if (_formKey.currentState.validate()) {
+                            //truthy
+                          } else {
+                            //falsy
+                          }
+                        },
+                        textContent: "Set up Adoption",
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -241,10 +325,26 @@ class _AddPostState extends State<AddPost> {
 
   Widget displayImages() {
     if (images.length > 0) {
-      return AssetThumb(
-        asset: images[0],
-        width: 30,
-        height: 30,
+      return Stack(
+        children: [
+          Container(
+            child: AssetThumb(
+              asset: images[0],
+              width: 50,
+              height: 50,
+            ),
+          ),
+          Positioned(
+            left: 20,
+            bottom: 20,
+            child: IconButton(
+                icon: Icon(
+                  Icons.cancel,
+                  color: Colors.red,
+                ),
+                onPressed: () {}),
+          )
+        ],
       );
     } else {
       return Text('Upload your \n pet Images');
@@ -256,18 +356,33 @@ class _AddPostState extends State<AddPost> {
       crossAxisCount: 3,
       children: List.generate(images.length, (index) {
         Asset asset = images[index];
-        return AssetThumb(
-          asset: asset,
-          width: 30,
-          height: 30,
+        return Stack(
+          children: [
+            AssetThumb(
+              asset: asset,
+              width: 30,
+              height: 30,
+            ),
+            Positioned(
+              top: 0.0,
+              right: 0.0,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: new IconButton(
+                    icon: Icon(
+                      Icons.cancel,
+                      color: Colors.red,
+                    ),
+                    onPressed: () {}),
+              ),
+            )
+          ],
         );
       }),
     );
   }
 
   Future uploadImage() async {
-    final images = await MultiImagePicker.pickImages(maxImages: 4);
-
     List<CloudinaryResponse> uploaddedImages = await cloudinary.multiUpload(
       images
           .map(
