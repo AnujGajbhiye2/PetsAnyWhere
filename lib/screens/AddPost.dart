@@ -1,8 +1,10 @@
 import 'dart:convert';
-import 'dart:io' as IO;
+import 'dart:developer';
+
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:http/http.dart' as http;
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:paw/environment/Strings.dart' as env;
 import 'package:flutter/material.dart';
 import 'package:paw/components/AppButton.dart';
@@ -13,6 +15,8 @@ import 'package:paw/constants.dart';
 import 'package:paw/model/addPost_model.dart';
 import 'package:paw/model/dropdown_model.dart';
 import 'package:paw/model/gender_model.dart';
+import 'package:paw/services/Globals.dart';
+import 'package:paw/utilities/loader.dart';
 import 'package:paw/utilities/utilities.dart';
 
 class AddPost extends StatefulWidget {
@@ -282,6 +286,8 @@ class _AddPostState extends State<AddPost> {
                           // Navigator.pushNamed(context, 'messages');
                           if (_formKey.currentState.validate()) {
                             //truthy
+                            submitForm();
+                            // inspect(g_userId);
                           } else {
                             //falsy
                           }
@@ -325,11 +331,39 @@ class _AddPostState extends State<AddPost> {
 
   Widget displayImages() {
     if (images.length > 0) {
-      return Stack(
+      return Row(
+        children: [
+          imageThumbnail(0),
+          images.length == 2
+              ? imageThumbnail(1)
+              : SizedBox(
+                  height: 1,
+                ),
+          images.length == 3
+              ? imageThumbnail(2)
+              : SizedBox(
+                  height: 1,
+                ),
+          images.length == 4
+              ? imageThumbnail(3)
+              : SizedBox(
+                  height: 1,
+                ),
+        ],
+      );
+    } else {
+      return Text('Upload your \n pet Images');
+    }
+  }
+
+  Padding imageThumbnail(int index) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: Stack(
         children: [
           Container(
             child: AssetThumb(
-              asset: images[0],
+              asset: images[index],
               width: 50,
               height: 50,
             ),
@@ -345,10 +379,8 @@ class _AddPostState extends State<AddPost> {
                 onPressed: () {}),
           )
         ],
-      );
-    } else {
-      return Text('Upload your \n pet Images');
-    }
+      ),
+    );
   }
 
   Widget buildGridView() {
@@ -393,5 +425,35 @@ class _AddPostState extends State<AddPost> {
     );
 
     print(uploaddedImages);
+  }
+
+  Future submitForm() async {
+    try {
+      LoadingOverlay.of(context).show();
+      final response = await http.post(env.addPost, headers: <String, String>{
+        'Context-Type': 'application/json;charSet=UTF-8'
+      }, body: <String, String>{
+        'userId': g_userId,
+        'age': form.age,
+        'breed': form.breed,
+        'category': form.category,
+        'color': form.color,
+        'gender': form.gender,
+        'petName': form.petName,
+        'petStory': form.petStory,
+        'weight': form.weight
+      }).catchError((onError) => toast(onError.toString()));
+
+      Map<String, dynamic> responseJSON = json.decode(response.body);
+      if (responseJSON['success']) {
+        toast('Adoption added successfully 🐤');
+        LoadingOverlay.of(context).hide();
+      } else {
+        toast(responseJSON['errMessage']);
+        LoadingOverlay.of(context).hide();
+      }
+    } catch (e) {
+      inspect(e);
+    }
   }
 }

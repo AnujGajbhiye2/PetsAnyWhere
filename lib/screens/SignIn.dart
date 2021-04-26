@@ -7,6 +7,7 @@ import 'package:paw/components/BottomWoofButton.dart';
 import 'package:paw/components/CustomTextField.dart';
 import 'package:paw/environment/Strings.dart' as env;
 import 'package:paw/model/signIn_model.dart';
+import 'package:paw/services/Globals.dart';
 import 'package:paw/utilities/loader.dart';
 
 import '../constants.dart';
@@ -156,6 +157,8 @@ class _SignInState extends State<SignIn> {
         userData['_id'] = responseJson['user']['_id'];
         userData['email'] = responseJson['user']['email'];
         userData['phone'] = responseJson['user']['phone'];
+        g_email = responseJson['user']['email'];
+        g_userId = responseJson['user']['_id'];
 
         await prefs.setString('user', json.encode(userData));
         LoadingOverlay.of(context).hide();
